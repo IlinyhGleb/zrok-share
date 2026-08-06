@@ -9,6 +9,16 @@ A lightweight Docker image that exposes a local HTTP service through zrok.
 - Generic: works with any HTTP service
 - Suitable for Docker and TrueNAS SCALE
 
+## Repository
+
+```text
+.
+├── Dockerfile
+├── start.sh
+├── example_environment.json
+└── README.md
+```
+
 ## Build
 
 ```bash
@@ -17,26 +27,35 @@ docker build -t zrok-share .
 
 ## Initialize zrok
 
-Run once on any machine:
+Generate your zrok identity once:
 
 ```bash
 mkdir zrok
 
 docker run --rm -it \
-    -v $(pwd)/zrok:/root/.zrok \
+    -v $(pwd)/zrok:/home/ziggy/.zrok \
     openziti/zrok enable YOUR_ENABLE_TOKEN
 ```
 
-The generated `environment.json` is your zrok identity.
+This creates:
+
+```text
+zrok/
+└── environment.json
+```
+
+The file contains your zrok identity and should be kept private.
+
+See `example_environment.json` for the expected file name and location.
 
 ## Run
 
 ```bash
 docker run -d \
-    --name zrok-share \
-    -e ZROK_TARGET=http://host.docker.internal:5678 \
-    -v $(pwd)/zrok:/root/.zrok:ro \
-    zrok-share
+  --name zrok-share \
+  -e ZROK_TARGET=http://host.docker.internal:5678 \
+  -v $(pwd)/zrok:/home/ziggy/.zrok:ro \
+  ghcr.io/ilinyhgleb/zrok-share:latest
 ```
 
 ## Environment variables
@@ -74,7 +93,7 @@ Mount:
 
 | Host | Container |
 |------|-----------|
-| `/mnt/apps/zrok` | `/root/.zrok` |
+| `/mnt/apps/zrok` | `/home/ziggy/.zrok` |
 
 Environment variables:
 
@@ -85,3 +104,7 @@ ZROK_TARGET=http://n8n:5678
 Deploy the app and check the logs.
 
 zrok prints the public URL after startup.
+
+## Security
+
+`environment.json` contains your zrok identity. Do not commit it to Git or share it publicly.

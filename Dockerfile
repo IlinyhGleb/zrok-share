@@ -9,9 +9,12 @@ USER root
 
 COPY --chmod=755 start.sh /usr/local/bin/start.sh
 
+# For local run
+#COPY --chmod=755 ./zrok /home/ziggy/.zrok
+
 USER ziggy
 
-ENV ZROK_TARGET=http://localhost:30109
+ENV ZROK_TARGET=http://192.168.1.5:30109
 ENV ZROK_MODE=public
 
 ENTRYPOINT ["/usr/local/bin/start.sh"]

@@ -28,7 +28,7 @@ COPY --chmod=755 start.sh /usr/local/bin/start.sh
 # For local run
 #COPY --chmod=755 ./zrok2 /home/ziggy/.zrok2
 
-ENV ZROK_TARGET=http://localhost:30109
-ENV ZROK_MODE=public
+ENV ZROK2_TARGET=http://localhost:30109
+ENV ZROK2_MODE=public
 
 ENTRYPOINT ["/usr/local/bin/start.sh"]

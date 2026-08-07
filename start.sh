@@ -12,7 +12,7 @@ fi
 #zrok overview
 
 
-zrok -v share "${ZROK_MODE}" "${ZROK_TARGET}"
+#zrok -v share "${ZROK_MODE}" "${ZROK_TARGET}"
 
 curl -v https://api-v1.zrok.io/api/v1/
 

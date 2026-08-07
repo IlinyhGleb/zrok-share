@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eu
+set -eux
 
 CONFIG="${HOME}/.zrok/environment.json"
 
@@ -9,4 +9,6 @@ if [ ! -f "$CONFIG" ]; then
     exit 1
 fi
 
-exec zrok share "${ZROK_MODE}" "${ZROK_TARGET}"
+zrok overview
+
+zrok -v share public "${ZROK_TARGET}"

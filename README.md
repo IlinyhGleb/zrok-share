@@ -7,6 +7,7 @@ A lightweight Docker image that exposes a local HTTP service through zrok.
 - Uses an existing zrok environment
 - No enable token stored in the container
 - Generic: works with any HTTP service
+- Runs zrok in headless mode
 - Suitable for Docker and TrueNAS SCALE
 
 ## Repository
@@ -27,84 +28,126 @@ docker build -t zrok-share .
 
 ## Initialize zrok
 
-Generate your zrok identity once:
+Generate your zrok environment once:
 
 ```bash
-mkdir zrok
+mkdir zrok2
 
 docker run --rm -it \
-    -v $(pwd)/zrok:/home/ziggy/.zrok \
-    openziti/zrok enable YOUR_ENABLE_TOKEN
+    -v "$(pwd)/zrok2:/home/ziggy/.zrok2" \
+    --entrypoint zrok2 \
+    zrok-share \
+    enable YOUR_ENABLE_TOKEN
 ```
 
-This creates:
+For the published image:
+
+```bash
+mkdir zrok2
+
+docker run --rm -it \
+    -v "$(pwd)/zrok2:/home/ziggy/.zrok2" \
+    --entrypoint zrok2 \
+    ghcr.io/ilinyhgleb/zrok-share:latest \
+    enable YOUR_ENABLE_TOKEN
+```
+
+This creates the zrok environment in:
 
 ```text
-zrok/
-└── environment.json
+zrok2/
+├── environment.json
+├── identities/
+│   └── environment.json
+└── metadata.json
 ```
 
-The file contains your zrok identity and should be kept private.
+The files contain your zrok identity and should be kept private.
 
-See `example_environment.json` for the expected file name and location.
+See `example_environment.json` for an example of the environment configuration.
 
 ## Run
+
+For a service accessible from the container as `localhost`:
 
 ```bash
 docker run -d \
   --name zrok-share \
-  -e ZROK_TARGET=http://host.docker.internal:5678 \
-  -v $(pwd)/zrok:/home/ziggy/.zrok:ro \
+  -e ZROK2_TARGET=http://localhost:30109 \
+  -e ZROK2_MODE=public \
+  -v "$(pwd)/zrok2:/home/ziggy/.zrok2:ro" \
   ghcr.io/ilinyhgleb/zrok-share:latest
 ```
 
+For a service running on another host:
+
+```bash
+docker run -d \
+  --name zrok-share \
+  -e ZROK2_TARGET=http://192.168.1.5:30109 \
+  -e ZROK2_MODE=public \
+  -v "$(pwd)/zrok2:/home/ziggy/.zrok2:ro" \
+  ghcr.io/ilinyhgleb/zrok-share:dev
+```
+
+The container runs:
+
+```bash
+zrok2 share "$ZROK2_MODE" --headless "$ZROK2_TARGET"
+```
+
+zrok prints the public URL in the container logs.
+
 ## Environment variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `ZROK_TARGET` | `http://localhost:30109` | Service to expose |
-| `ZROK_MODE` | `public` | Share mode |
+| Variable       | Default                  | Description            |
+| -------------- | ------------------------ | ---------------------- |
+| `ZROK2_TARGET` | `http://localhost:30109` | HTTP service to expose |
+| `ZROK2_MODE`   | `public`                 | zrok share mode        |
 
-## Example
+## Examples
 
 Expose n8n:
 
 ```text
-ZROK_TARGET=http://n8n:5678
+ZROK2_TARGET=http://n8n:5678
 ```
 
 Expose Home Assistant:
 
 ```text
-ZROK_TARGET=http://homeassistant:8123
+ZROK2_TARGET=http://homeassistant:8123
 ```
 
-Expose any local web server:
+Expose a web server on the local network:
 
 ```text
-ZROK_TARGET=http://192.168.1.10:8080
+ZROK2_TARGET=http://192.168.1.10:8080
 ```
 
 ## TrueNAS SCALE
 
-Create a Custom App.
+Create a **Custom App**.
 
-Mount:
+Mount the directory containing your zrok2 environment:
 
-| Host | Container |
-|------|-----------|
-| `/mnt/apps/zrok` | `/home/ziggy/.zrok` |
+| Host              | Container            |
+| ----------------- | -------------------- |
+| `/mnt/apps/zrok2` | `/home/ziggy/.zrok2` |
 
-Environment variables:
+Set the environment variables:
 
 ```text
-ZROK_TARGET=http://n8n:5678
+ZROK2_TARGET=http://n8n:5678
+ZROK2_MODE=public
 ```
 
-Deploy the app and check the logs.
+Deploy the app and check the container logs.
 
 zrok prints the public URL after startup.
 
 ## Security
 
-`environment.json` contains your zrok identity. Do not commit it to Git or share it publicly.
+The zrok environment files contain authentication information. Do not commit them to Git or share them publicly.
+
+Keep the `zrok2` directory outside the repository or add it to `.gitignore`.

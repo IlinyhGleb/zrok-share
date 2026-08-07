@@ -15,7 +15,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     curl -fsSL \
       "https://github.com/openziti/zrok/releases/download/${ZROK_VERSION}/zrok_${ZROK_VERSION#v}_linux_amd64.tar.gz" \
-      | tar -xz -C /usr/local/bin zrok && \
+      | tar -xz -C /usr/local/bin zrok2 && \
     chmod +x /usr/local/bin/zrok
 
 RUN useradd -m -u 2171 ziggy

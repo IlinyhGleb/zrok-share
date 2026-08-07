@@ -5,6 +5,7 @@ LABEL org.opencontainers.image.description="Share a local HTTP service through z
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.source="https://github.com/ilinyhgleb/zrok-share"
 
+ARG TARGETARCH
 ARG ZROK_VERSION=v2.0.4
 
 RUN apt-get update && \
@@ -14,9 +15,8 @@ RUN apt-get update && \
         tar && \
     rm -rf /var/lib/apt/lists/* && \
     curl -fsSL \
-      "https://github.com/openziti/zrok/releases/download/${ZROK_VERSION}/zrok_${ZROK_VERSION#v}_linux_amd64.tar.gz" \
-      | tar -xz -C /usr/local/bin zrok2 && \
-    chmod +x /usr/local/bin/zrok
+      "https://github.com/openziti/zrok/releases/download/${ZROK_VERSION}/zrok_${ZROK_VERSION#v}_linux_${TARGETARCH}.tar.gz" \
+      | tar -xz -C /usr/local/bin
 
 RUN useradd -m -u 2171 ziggy
 

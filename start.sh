@@ -9,4 +9,4 @@ if [ ! -f "$CONFIG" ]; then
     exit 1
 fi
 
-exec zrok share "$ZROK_MODE" "$ZROK_TARGET"
+exec zrok2 share "$ZROK_MODE" "$ZROK_TARGET"

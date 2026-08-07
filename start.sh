@@ -11,4 +11,4 @@ fi
 
 zrok overview
 
-zrok -v share public "${ZROK_TARGET}"
+#zrok -v share public "${ZROK_TARGET}"

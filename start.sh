@@ -2,7 +2,7 @@
 
 set -eux
 
-CONFIG="${HOME}/.zrok/environment.json"
+CONFIG="${HOME}/.zrok2/environment.json"
 
 if [ ! -f "$CONFIG" ]; then
     echo "ERROR: ${CONFIG} not found."

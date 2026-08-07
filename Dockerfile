@@ -26,7 +26,7 @@ WORKDIR /home/ziggy
 COPY --chmod=755 start.sh /usr/local/bin/start.sh
 
 # For local run
-#COPY --chmod=755 ./zrok /home/ziggy/.zrok
+COPY --chmod=755 ./zrok2 /home/ziggy/.zrok2
 
 ENV ZROK_TARGET=http://localhost:30109
 ENV ZROK_MODE=public

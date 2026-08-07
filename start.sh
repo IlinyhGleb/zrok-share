@@ -12,3 +12,7 @@ fi
 zrok overview
 
 #zrok -v share public "${ZROK_TARGET}"
+
+curl -v https://api-v1.zrok.io/api/v1/
+
+sleep 6000

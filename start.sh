@@ -9,4 +9,4 @@ if [ ! -f "$CONFIG" ]; then
     exit 1
 fi
 
-exec zrok2 share --headless "$ZROK2_MODE" "$ZROK2_TARGET"
+exec zrok2 share "$ZROK2_MODE" --headless "$ZROK2_TARGET"

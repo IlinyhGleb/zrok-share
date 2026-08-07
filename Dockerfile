@@ -5,16 +5,18 @@ LABEL org.opencontainers.image.description="Share a local HTTP service through z
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.source="https://github.com/ilinyhgleb/zrok-share"
 
-RUN apt-get update && \
-    apt-get install -y curl ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
-
-# Download zrok
 ARG ZROK_VERSION=v2.0.4
 
-RUN curl -L \
-  -o /tmp/zrok.tar.gz \
-  https://github.com/openziti/zrok/releases/download/${ZROK_VERSION}/zrok_${ZROK_VERSION#v}_linux_amd64.tar.gz
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        tar && \
+    rm -rf /var/lib/apt/lists/* && \
+    curl -fsSL \
+      "https://github.com/openziti/zrok/releases/download/${ZROK_VERSION}/zrok_${ZROK_VERSION#v}_linux_amd64.tar.gz" \
+      | tar -xz -C /usr/local/bin zrok && \
+    chmod +x /usr/local/bin/zrok
 
 RUN useradd -m -u 2171 ziggy
 

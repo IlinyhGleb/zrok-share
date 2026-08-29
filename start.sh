@@ -31,7 +31,9 @@ done
 # Extract the public zrok URL.
 grep -oE '[[:alnum:]]+\.shares\.zrok\.io' "$LOG" |
     head -n 1 |
-    sed 's|^|https://|' > "$URL_FILE"
+    sed 's|^|https://|' > "${URL_FILE}.tmp"
+
+mv "${URL_FILE}.tmp" "$URL_FILE"
 
 if [ ! -s "$URL_FILE" ]; then
     echo "ERROR: failed to extract zrok URL."

@@ -4,15 +4,20 @@ set -eux
 
 CONFIG="${HOME}/.zrok2/environment.json"
 
+SHARED_DIR="${HOME}/shared"
+
+LOG="${SHARED_DIR}/zrok.log"
+URL_FILE="${SHARED_DIR}/zrok-url"
+
+
 if [ ! -f "$CONFIG" ]; then
     echo "ERROR: ${CONFIG} not found."
     exit 1
 fi
 
-mkdir -p "${HOME}/shared"
+rm -f "$URL_FILE"
 
-LOG="${HOME}/shared/zrok.log"
-URL_FILE="${HOME}/shared/zrok-url"
+echo "Starting zrok..."
 
 # Start zrok and save its output to the shared log.
 zrok2 share "$ZROK2_MODE" --headless "$ZROK2_TARGET" 2>&1 |

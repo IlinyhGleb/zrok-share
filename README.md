@@ -71,22 +71,28 @@ See `example_environment.json` for an example of the environment configuration.
 For a service accessible from the container as `localhost`:
 
 ```bash
+mkdir shared
+
 docker run -d \
   --name zrok-share \
-  -e ZROK2_TARGET=http://localhost:30109 \
+  -e ZROK2_TARGET=http://localhost:5678 \
   -e ZROK2_MODE=public \
   -v "$(pwd)/zrok2:/home/ziggy/.zrok2:ro" \
+  -v "$(pwd)/shared:/home/ziggy/shared" \
   ghcr.io/ilinyhgleb/zrok-share:latest
 ```
 
 For a service running on another host:
 
 ```bash
+mkdir shared
+
 docker run -d \
   --name zrok-share \
-  -e ZROK2_TARGET=http://192.168.1.5:30109 \
+  -e ZROK2_TARGET=http://192.168.1.5:5678 \
   -e ZROK2_MODE=public \
   -v "$(pwd)/zrok2:/home/ziggy/.zrok2:ro" \
+  -v "$(pwd)/shared:/home/ziggy/shared" \
   ghcr.io/ilinyhgleb/zrok-share:dev
 ```
 
@@ -96,13 +102,13 @@ The container runs:
 zrok2 share "$ZROK2_MODE" --headless "$ZROK2_TARGET"
 ```
 
-zrok prints the public URL in the container logs.
+zrok prints the public URL in the container logs and saves it in the `shared` folder.
 
 ## Environment variables
 
 | Variable       | Default                  | Description            |
 | -------------- | ------------------------ | ---------------------- |
-| `ZROK2_TARGET` | `http://localhost:30109` | HTTP service to expose |
+| `ZROK2_TARGET` | `http://localhost:5678`  | HTTP service to expose |
 | `ZROK2_MODE`   | `public`                 | zrok share mode        |
 
 ## Examples
